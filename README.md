@@ -8,6 +8,13 @@ sleep timer, and calming screen filters with a black screen mode.
 [![Download](https://img.shields.io/github/v/release/kandekar007/sleepytube?label=Download&style=for-the-badge&color=2ea44f)](https://github.com/kandekar007/sleepytube/releases/latest)
 [![Buy me a coffee](https://img.shields.io/badge/Buy_me_a_coffee-☕-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/adityakandekar)
 
+[![Downloads](https://img.shields.io/github/downloads/kandekar007/sleepytube/total?label=downloads&color=8b7cf6)](https://github.com/kandekar007/sleepytube/releases)
+[![Visitors](https://hits.sh/github.com/kandekar007/sleepytube.svg?label=visitors&color=8b7cf6)](https://hits.sh/github.com/kandekar007/sleepytube/)
+[![Stars](https://img.shields.io/github/stars/kandekar007/sleepytube?color=8b7cf6)](https://github.com/kandekar007/sleepytube/stargazers)
+<!-- Once published on the Chrome Web Store, add (replace EXTENSION_ID):
+[![Users](https://img.shields.io/chrome-web-store/users/EXTENSION_ID?color=8b7cf6)](https://chromewebstore.google.com/detail/EXTENSION_ID)
+-->
+
 ![SleepyTube demo](demo/sleepytube-demo.gif)
 
 ## Demo
