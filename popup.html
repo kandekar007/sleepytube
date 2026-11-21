@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SleepyTube</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true">
+    <span class="orb o1"></span>
+    <span class="orb o2"></span>
+    <span class="orb o3"></span>
+    <span class="orb o4"></span>
+    <span class="stars"></span>
+  </div>
+
+  <header>
+    <div class="brand">
+      <div class="moon"><img src="icons/icon48.png" alt="" width="34" height="34"></div>
+      <div>
+        <h1>SleepyTube</h1>
+        <div id="status" class="pill"><span class="dot"></span><span id="statusText">Checking…</span></div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a id="coffee" class="icon-btn coffee" href="https://buymeacoffee.com/adityakandekar" target="_blank" rel="noopener" title="Buy me a coffee" aria-label="Buy me a coffee">☕</a>
+      <button id="reset" class="icon-btn" type="button" title="Reset">↺</button>
+      <label class="power" title="Turn everything on/off">
+        <input type="checkbox" id="enabled">
+        <span class="track"><span class="knob"></span></span>
+      </label>
+    </div>
+  </header>
+
+  <button id="reload" class="banner" hidden>↻ Reload this tab to start SleepyTube</button>
+
+  <nav class="tabs segmented" role="tablist">
+    <button type="button" role="tab" data-tab="sound">🎧 Sound</button>
+    <button type="button" role="tab" data-tab="screen">🌙 Screen<span id="screenBadge" class="badge" hidden></span></button>
+  </nav>
+
+  <main id="fx">
+    <div class="pane" data-pane="sound">
+    <section class="card">
+      <div class="card-head"><h2>Mood</h2></div>
+      <div id="presets" class="presets"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>Sound</h2></div>
+      <div id="mainControls"></div>
+      <div id="noiseType" class="segmented" role="radiogroup" aria-label="Hush sound"></div>
+    </section>
+
+    <details id="fine" class="card">
+      <summary>
+        <h2>Fine-tune</h2>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div id="fineControls"></div>
+    </details>
+    </div>
+
+    <div class="pane" data-pane="screen" hidden>
+      <section class="card">
+        <label class="switch-row">
+          <span class="sr-icon">🖤</span>
+          <span class="sr-text">
+            <strong>Black screen</strong>
+            <small>Blacks out the page, sound keeps playing. Move the mouse over it for a “Show video” button.</small>
+          </span>
+          <span class="power">
+            <input type="checkbox" id="blackout">
+            <span class="track"><span class="knob"></span></span>
+          </span>
+        </label>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>Look</h2></div>
+        <div id="looks" class="presets"></div>
+        <div id="visualControls"></div>
+      </section>
+    </div>
+  </main>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Sleep timer</h2>
+      <span id="sleepLeft" class="countdown"></span>
+    </div>
+    <div id="sleep" class="segmented timer"></div>
+    <div class="progress"><span id="sleepBar"></span></div>
+  </section>
+
+  <script src="settings.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

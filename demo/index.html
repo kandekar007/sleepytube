@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SleepyTube · live demo</title>
+  <link rel="icon" href="../icons/icon32.png">
+  <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+  <!-- Browser chrome: sits above the extension's screen layers, like the real toolbar -->
+  <div class="chrome-bar">
+    <div class="tabstrip">
+      <span class="lights"><i></i><i></i><i></i></span>
+      <div class="tab"><span class="yt-mini"></span>lofi beats to fall asleep to 🌙 – YouTube<span class="x">×</span></div>
+      <span class="newtab">+</span>
+    </div>
+    <div class="toolbar">
+      <span class="nav">‹ › ↻</span>
+      <div class="omnibox"><span class="lock">🔒</span>youtube.com/watch?v=<b>sleepy-demo</b></div>
+      <button id="replayBtn" class="replay" type="button" hidden>✨ Replay tour</button>
+      <button id="extIcon" class="ext-icon" type="button" title="SleepyTube">
+        <img src="../icons/icon32.png" alt="SleepyTube">
+      </button>
+      <span class="avatar"></span>
+    </div>
+  </div>
+
+  <div class="page">
+    <header class="yt-head">
+      <span class="burger">☰</span>
+      <span class="yt-logo"><span class="play"></span>YouTube</span>
+      <div class="search"><span>Search</span><i>⌕</i></div>
+      <span class="spacer"></span>
+      <span class="sign">Sign in</span>
+    </header>
+
+    <div class="watch">
+      <section class="primary">
+        <div id="movie_player" class="player">
+          <video class="html5-main-video" playsinline loop></video>
+          <canvas id="scene"></canvas>
+          <button id="bigPlay" class="big-play" type="button" aria-label="Play">▶</button>
+          <div class="controls">
+            <button id="playBtn" type="button" aria-label="Play/pause">▶</button>
+            <span id="time" class="time">0:00 / 0:24</span>
+            <div class="scrub"><span id="scrubFill"></span></div>
+            <span id="rate" class="rate">1.00×</span>
+            <span id="liveFx" class="live-fx">🌙 SleepyTube</span>
+          </div>
+        </div>
+
+        <h1 class="title">lofi beats to fall asleep to 🌙 rainy night window</h1>
+        <div class="meta">
+          <span class="ch-avatar"></span>
+          <div class="ch"><b>Lofi Moon</b><small>2.4M subscribers</small></div>
+          <button class="subscribe" type="button">Subscribe</button>
+          <span class="spacer"></span>
+          <span class="chip">👍 128K</span>
+          <span class="chip">↗ Share</span>
+        </div>
+
+        <div class="lower">
+          <div class="desc">
+            <b>Demo · 1.2M watching now</b>
+            <p>This track is composed live in your browser. The real SleepyTube popup on the right drives the
+              extension's actual audio engine and screen filters on this page, nothing is pre-recorded.</p>
+            <p class="muted">🎧 Headphones recommended. Try <b>Muffle</b> and watch the treble disappear.</p>
+          </div>
+          <div class="spectrum-card">
+            <div class="sc-head"><b>What you're hearing</b><span id="pitch">original</span></div>
+            <canvas id="spectrum"></canvas>
+            <div class="sc-axis"><span>bass</span><span>mids</span><span>treble</span></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="secondary" id="upNext"></aside>
+    </div>
+  </div>
+
+  <!-- The real extension popup, loaded from ../popup.html -->
+  <div id="popupPanel" class="popup-panel">
+    <iframe id="popupFrame" title="SleepyTube popup"></iframe>
+  </div>
+
+  <div id="intro" class="intro">
+    <div class="intro-card">
+      <div class="intro-moon">🌙</div>
+      <h2>SleepyTube</h2>
+      <p>Make any YouTube video sound and look ready for sleep.</p>
+      <div class="intro-actions">
+        <button id="tourBtn" class="primary-btn" type="button" disabled>Composing lofi beats…</button>
+        <button id="exploreBtn" class="ghost-btn" type="button" disabled>Explore on my own</button>
+      </div>
+      <small>🔊 Turn your sound on · runs entirely in your browser</small>
+    </div>
+  </div>
+
+  <div id="caption" class="caption" hidden>
+    <span id="capStep" class="cap-step"></span>
+    <div class="cap-text"><b id="capTitle"></b><span id="capBody"></span></div>
+    <button id="skipBtn" class="cap-skip" type="button">Skip</button>
+    <div class="cap-progress"><span id="capBar"></span></div>
+  </div>
+
+  <div id="cursor" class="cursor" hidden></div>
+
+  <script src="shim.js"></script>
+  <script src="../settings.js"></script>
+  <script src="../content.js"></script>
+  <script src="music.js"></script>
+  <script src="demo.js"></script>
+</body>
+</html>
