@@ -3,7 +3,8 @@
   if (window.__sleepyTubeLoaded) return;
   window.__sleepyTubeLoaded = true;
 
-  const { DEFAULTS, normalize } = globalThis.SleepyTube;
+  const { DEFAULTS, normalize, DEFAULT_THEME, themeOf } = globalThis.SleepyTube;
+  let themeId = DEFAULT_THEME;
   const SMOOTH = 0.08; // seconds, time constant for parameter changes
 
   let settings = { ...DEFAULTS };
@@ -320,36 +321,39 @@
     const root = host.attachShadow({ mode: 'open' });
     root.innerHTML = `
       <style>
-        :host { cursor: none; }
+        :host { cursor: none; --tint: #b9c6e4; --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif; }
         :host(.awake) { cursor: default; }
         .wrap {
           position: absolute; inset: 0; display: flex; flex-direction: column;
           align-items: center; justify-content: center; gap: 14px;
-          font: 14px/1.4 ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
-          color: rgba(235, 230, 255, 0.75); text-align: center;
+          font: 14px/1.4 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
+          letter-spacing: -0.15px; color: rgba(242, 240, 235, 0.56); text-align: center;
+          -webkit-font-smoothing: antialiased;
           opacity: 0; transition: opacity 0.8s ease; user-select: none;
         }
         :host(.awake) .wrap { opacity: 1; transition-duration: 0.25s; }
-        .moon { font-size: 34px; filter: drop-shadow(0 0 18px rgba(240, 228, 170, 0.35)); }
-        .sleep { font-variant-numeric: tabular-nums; color: rgba(158, 224, 255, 0.8); min-height: 1.4em; }
+        svg { display: block; }
+        .moon { color: var(--tint); }
+        .sleep { font: 300 34px/1.1 "New York", ui-serif, "Iowan Old Style", Georgia, serif; font-variant-numeric: tabular-nums; letter-spacing: 0.5px; color: rgba(242, 240, 235, 0.85); min-height: 0; }
+        .sleep:empty { display: none; }
+        .sleep::after { content: attr(data-label); display: block; margin-top: 6px; font: 400 12px var(--sans); letter-spacing: 0; color: rgba(242, 240, 235, 0.4); }
         button {
-          padding: 10px 20px; border-radius: 999px; cursor: pointer;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 8px 24px rgba(0, 0, 0, 0.6);
-          color: #f4f2ff; font: inherit; font-size: 14px;
-          transition: background 0.2s, transform 0.1s;
+          display: flex; align-items: center; gap: 8px;
+          padding: 10px 20px 10px 16px; border: 0; border-radius: 999px; cursor: pointer;
+          background: transparent; box-shadow: inset 0 0 0 1px rgba(242, 240, 235, 0.22);
+          color: #f2f0eb; font: inherit; font-size: 14px; font-weight: 500; letter-spacing: 0;
+          transition: background 0.2s, transform 0.2s cubic-bezier(0.32, 0.72, 0, 1);
         }
-        button:hover { background: linear-gradient(160deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)); }
-        button:active { transform: scale(0.97); }
-        button:focus-visible { outline: 2px solid #9ee0ff; outline-offset: 2px; }
-        small { font-size: 12px; color: rgba(235, 230, 255, 0.45); }
+        button:hover { background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px rgba(242, 240, 235, 0.36); }
+        button:active { transform: scale(0.96); }
+        button:focus-visible { outline: 3px solid color-mix(in srgb, var(--tint) 55%, transparent); outline-offset: 2px; }
+        small { font-size: 12px; color: rgba(242, 240, 235, 0.3); }
       </style>
       <div class="wrap">
-        <div class="moon">🌙</div>
+        <svg class="moon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="M19.6 14.6A8 8 0 0 1 9.4 4.4a8 8 0 1 0 10.2 10.2Z"/></svg>
         <div class="sleep"></div>
-        <button type="button">☀️ Show video</button>
-        <small>Sound keeps playing · move the mouse to see this button</small>
+        <button type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5l1.4 1.4M17.1 17.1l1.4 1.4M5.5 18.5l1.4-1.4M17.1 6.9l1.4-1.4"/></svg>Show video</button>
+        <small>Sound keeps playing. Move the mouse to see this button.</small>
       </div>`;
     const button = root.querySelector('button');
     button.addEventListener('click', (e) => {
@@ -368,6 +372,7 @@
       host.addEventListener(type, (e) => { e.stopPropagation(); if (type === 'contextmenu') e.preventDefault(); });
     }
     scr.ui = { wake, sleepText: root.querySelector('.sleep') };
+    host.style.setProperty('--tint', themeOf(themeId).tint);
     return host;
   }
 
@@ -387,7 +392,8 @@
     const ms = Math.max(0, sleep.endsAt - Date.now());
     const m = Math.floor(ms / 60000);
     const sec = Math.floor((ms % 60000) / 1000);
-    scr.ui.sleepText.textContent = `Pausing in ${m}:${String(sec).padStart(2, '0')}`;
+    scr.ui.sleepText.textContent = `${m}:${String(sec).padStart(2, '0')}`;
+    scr.ui.sleepText.dataset.label = 'until the video pauses';
   }
 
   function applyScreen() {
@@ -543,14 +549,21 @@
     }
   });
 
+  function setTheme(id) {
+    themeId = id;
+    scr.blackout?.style.setProperty('--tint', themeOf(themeId).tint);
+  }
+
   chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes.theme) setTheme(changes.theme.newValue);
     if (area === 'local' && changes.settings) {
       settings = normalize(changes.settings.newValue);
       applySettings();
     }
   });
 
-  chrome.storage.local.get('settings').then(({ settings: stored }) => {
+  chrome.storage.local.get(['settings', 'theme']).then(({ settings: stored, theme }) => {
+    setTheme(theme);
     settings = normalize(stored);
     scan();
     applySettings();

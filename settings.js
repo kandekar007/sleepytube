@@ -1,25 +1,25 @@
-// Shared between the content script and the popup.
+// Shared between the content script and the popup. Icons are names from icons.js.
 (function (root) {
   'use strict';
 
   const NOISE_TYPES = {
-    brown: { label: 'Brown', icon: '🌑', hint: 'Deep, soft rumble' },
-    pink: { label: 'Pink', icon: '🌸', hint: 'Gentle hush' },
-    white: { label: 'Fan', icon: '🌬️', hint: 'White noise, like a fan' },
-    rain: { label: 'Rain', icon: '🌧️', hint: 'Soft rainfall' }
+    brown: { label: 'Brown', hint: 'Deep, soft rumble' },
+    pink: { label: 'Pink', hint: 'Gentle hush' },
+    white: { label: 'Fan', hint: 'White noise, like a fan' },
+    rain: { label: 'Rain', hint: 'Soft rainfall' }
   };
 
   const CONTROLS = [
-    { key: 'speed', section: 'Tempo', main: true, icon: '🐢', label: 'Speed', min: 0.5, max: 1, step: 0.01,
+    { key: 'speed', section: 'Tempo', main: true, icon: 'gauge', label: 'Speed', min: 0.5, max: 1, step: 0.01,
       hint: 'Slower playback also lowers the pitch',
       format: (v) => `${Math.round(v * 100)}%` },
-    { key: 'muffle', section: 'Tone', main: true, icon: '🧱', label: 'Muffle', min: 0, max: 100, step: 1,
+    { key: 'muffle', section: 'Tone', main: true, icon: 'speaker', label: 'Muffle', min: 0, max: 100, step: 1,
       hint: 'Cuts high frequencies, like hearing it through a wall',
       format: (v) => `${v}%` },
     { key: 'warmth', section: 'Tone', label: 'Warmth', min: 0, max: 100, step: 1,
       hint: 'Boosts bass and softens treble',
       format: (v) => `${v}%` },
-    { key: 'reverb', section: 'Space', main: true, icon: '⛰️', label: 'Reverb',
+    { key: 'reverb', section: 'Space', main: true, icon: 'radiate', label: 'Reverb',
       hint: 'Adds a spacious, washed-out room sound', min: 0, max: 100, step: 1,
       format: (v) => `${v}%` },
     { key: 'roomSize', section: 'Space', label: 'Room size', min: 1, max: 8, step: 0.5,
@@ -33,7 +33,7 @@
       format: (v) => `${v}ms` },
     { key: 'echoFeedback', section: 'Echo', label: 'Repeats', min: 0, max: 100, step: 1,
       format: (v) => `${v}%` },
-    { key: 'noise', section: 'Hush', main: true, icon: '🤫', label: 'Hush', min: 0, max: 100, step: 1,
+    { key: 'noise', section: 'Hush', main: true, icon: 'wind', label: 'Hush', min: 0, max: 100, step: 1,
       hint: 'Soft background noise that only plays with the video',
       format: (v) => `${v}%` },
     { key: 'volume', section: 'Output', label: 'Volume', min: 0, max: 150, step: 1,
@@ -43,15 +43,15 @@
   const pct = (v) => `${v}%`;
 
   const VISUAL_CONTROLS = [
-    { key: 'dim', icon: '🔅', label: 'Dim', min: 0, max: 90, step: 1,
+    { key: 'dim', icon: 'sunMin', label: 'Dim', min: 0, max: 90, step: 1,
       hint: 'Darkens the whole page', format: pct },
-    { key: 'blueCut', icon: '🟠', label: 'Blue cut', min: 0, max: 100, step: 1,
+    { key: 'blueCut', icon: 'eye', label: 'Blue cut', min: 0, max: 100, step: 1,
       hint: 'Blue light filter: warmer colours, gentler on sleepy eyes', format: pct },
-    { key: 'sepia', icon: '📜', label: 'Sepia', min: 0, max: 100, step: 1,
+    { key: 'sepia', icon: 'photo', label: 'Sepia', min: 0, max: 100, step: 1,
       hint: 'Old-photo brown tint', format: pct },
-    { key: 'mono', icon: '🌗', label: 'B&W', min: 0, max: 100, step: 1,
+    { key: 'mono', icon: 'halfCircle', label: 'B&W', min: 0, max: 100, step: 1,
       hint: 'Fades colour to black and white', format: pct },
-    { key: 'soften', icon: '☁️', label: 'Soften', min: 0, max: 100, step: 1,
+    { key: 'soften', icon: 'cloud', label: 'Soften', min: 0, max: 100, step: 1,
       hint: 'Gently blurs the video picture', format: pct }
   ];
 
@@ -81,39 +81,51 @@
   };
 
   const PRESETS = {
-    sleepy: { label: 'Sleepy', icon: '😴', values: { ...AUDIO_DEFAULTS } },
-    slowedReverb: { label: 'Slowed', icon: '🐢', hint: 'Slowed + reverb', values: {
+    sleepy: { label: 'Sleepy', icon: 'sleepy', values: { ...AUDIO_DEFAULTS } },
+    slowedReverb: { label: 'Slowed', icon: 'gauge', hint: 'Slowed + reverb', values: {
       speed: 0.8, muffle: 15, warmth: 35, reverb: 55, roomSize: 5, drift: 0,
       echo: 10, echoTime: 300, echoFeedback: 25, noise: 0, noiseType: 'brown', volume: 100 } },
-    underwater: { label: 'Underwater', icon: '🌊', values: {
+    underwater: { label: 'Underwater', icon: 'waves', values: {
       speed: 0.9, muffle: 82, warmth: 65, reverb: 35, roomSize: 3, drift: 15,
       echo: 0, echoTime: 380, echoFeedback: 30, noise: 18, noiseType: 'brown', volume: 115 } },
-    nextRoom: { label: 'Next Room', icon: '🚪', values: {
+    nextRoom: { label: 'Next Room', icon: 'door', values: {
       speed: 1, muffle: 70, warmth: 50, reverb: 45, roomSize: 2, drift: 0,
       echo: 0, echoTime: 380, echoFeedback: 30, noise: 10, noiseType: 'pink', volume: 110 } },
-    cathedral: { label: 'Cathedral', icon: '⛪', values: {
+    cathedral: { label: 'Cathedral', icon: 'arch', values: {
       speed: 0.9, muffle: 25, warmth: 30, reverb: 72, roomSize: 8, drift: 0,
       echo: 0, echoTime: 380, echoFeedback: 30, noise: 0, noiseType: 'pink', volume: 100 } },
-    lofiRain: { label: 'Lo-fi Rain', icon: '🌧️', values: {
+    lofiRain: { label: 'Lo-fi Rain', icon: 'rain', values: {
       speed: 0.92, muffle: 40, warmth: 55, reverb: 25, roomSize: 3, drift: 0,
       echo: 10, echoTime: 450, echoFeedback: 25, noise: 35, noiseType: 'rain', volume: 100 } },
-    dreamy8d: { label: 'Dreamy 8D', icon: '🎧', values: {
+    dreamy8d: { label: 'Dreamy 8D', icon: 'headphones', values: {
       speed: 0.85, muffle: 30, warmth: 40, reverb: 50, roomSize: 5, drift: 75,
       echo: 25, echoTime: 420, echoFeedback: 40, noise: 8, noiseType: 'pink', volume: 100 } }
   };
 
   const look = (dim, blueCut, sepia, mono, soften) => ({ dim, blueCut, sepia, mono, soften });
   const LOOKS = {
-    off: { label: 'Off', icon: '🎬', hint: 'Normal picture', values: look(0, 0, 0, 0, 0) },
-    night: { label: 'Night', icon: '🌙', hint: 'Warm and a little dimmer', values: look(20, 65, 0, 0, 0) },
-    candle: { label: 'Candle', icon: '🕯️', hint: 'Very warm, candle-lit', values: look(40, 90, 25, 0, 0) },
-    dark: { label: 'Dark', icon: '🌑', hint: 'Much darker, slightly warm', values: look(65, 40, 0, 0, 0) },
-    sepia: { label: 'Sepia', icon: '📜', values: look(10, 20, 85, 0, 0) },
-    mono: { label: 'B&W', icon: '🌗', hint: 'Black and white', values: look(15, 0, 0, 100, 0) },
-    dreamy: { label: 'Dreamy', icon: '☁️', hint: 'Soft, warm and hazy', values: look(20, 35, 10, 0, 45) }
+    off: { label: 'Off', icon: 'play', hint: 'Normal picture', values: look(0, 0, 0, 0, 0) },
+    night: { label: 'Night', icon: 'moon', hint: 'Warm and a little dimmer', values: look(20, 65, 0, 0, 0) },
+    candle: { label: 'Candle', icon: 'flame', hint: 'Very warm, candle-lit', values: look(40, 90, 25, 0, 0) },
+    dark: { label: 'Dark', icon: 'moonFill', hint: 'Much darker, slightly warm', values: look(65, 40, 0, 0, 0) },
+    sepia: { label: 'Sepia', icon: 'photo', values: look(10, 20, 85, 0, 0) },
+    mono: { label: 'B&W', icon: 'halfCircle', hint: 'Black and white', values: look(15, 0, 0, 100, 0) },
+    dreamy: { label: 'Dreamy', icon: 'cloud', hint: 'Soft, warm and hazy', values: look(20, 35, 10, 0, 45) }
   };
 
   const SLEEP_OPTIONS = [15, 30, 45, 60, 90];
+
+  // Accent colours for the popup and the black screen. Kept outside `settings` so Reset leaves them alone.
+  const THEMES = {
+    moonlight: { label: 'Moonlight', tint: '#b9c6e4', onTint: '#10131c' },
+    pearl: { label: 'Pearl', tint: '#e4e1da', onTint: '#141312' },
+    champagne: { label: 'Champagne', tint: '#d4bf9a', onTint: '#1c1508' },
+    sage: { label: 'Sage', tint: '#a9bfa8', onTint: '#0f1a10' },
+    rose: { label: 'Rose', tint: '#d6a9a9', onTint: '#200d0e' },
+    iris: { label: 'Iris', tint: '#aeb0e6', onTint: '#12132a' }
+  };
+  const DEFAULT_THEME = 'moonlight';
+  const themeOf = (id) => THEMES[id] || THEMES[DEFAULT_THEME];
 
   function normalize(raw) {
     const out = { ...DEFAULTS };
@@ -132,6 +144,7 @@
 
   root.SleepyTube = {
     DEFAULTS, AUDIO_DEFAULTS, VISUAL_DEFAULTS, PRESETS, LOOKS,
-    CONTROLS, VISUAL_CONTROLS, NOISE_TYPES, SLEEP_OPTIONS, normalize
+    CONTROLS, VISUAL_CONTROLS, NOISE_TYPES, SLEEP_OPTIONS, normalize,
+    THEMES, DEFAULT_THEME, themeOf
   };
 })(globalThis);

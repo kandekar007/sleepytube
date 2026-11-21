@@ -1,18 +1,28 @@
-# SleepyTube 🌙
+<p align="center">
+  <img src="icons/icon128.png" width="96" height="96" alt="SleepyTube icon">
+</p>
 
-A Chrome extension (Manifest V3) that makes YouTube sound and look sleepy:
-slowed, muffled, reverb and echo sound, a soft "hush" of background noise, a
-sleep timer, and calming screen filters with a black screen mode.
+<h1 align="center">SleepyTube</h1>
 
-[![Live demo](https://img.shields.io/badge/▶_Live_demo-try_it-8b7cf6?style=for-the-badge)](https://kandekar007.github.io/sleepytube/demo/)
-[![Download](https://img.shields.io/github/v/release/kandekar007/sleepytube?label=Download&style=for-the-badge&color=2ea44f)](https://github.com/kandekar007/sleepytube/releases/latest)
-[![Buy me a coffee](https://img.shields.io/badge/Buy_me_a_coffee-☕-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/adityakandekar)
+<p align="center">
+  Make any YouTube video sound and look ready for sleep.<br>
+  Slowed, muffled, reverb and echo sound, a soft hush of background noise,
+  a sleep timer, and calm screen filters with a black screen mode.
+</p>
 
-[![Downloads](https://img.shields.io/github/downloads/kandekar007/sleepytube/total?label=downloads&color=8b7cf6)](https://github.com/kandekar007/sleepytube/releases)
-[![Visitors](https://hits.sh/github.com/kandekar007/sleepytube.svg?label=visitors&color=8b7cf6)](https://hits.sh/github.com/kandekar007/sleepytube/)
-[![Stars](https://img.shields.io/github/stars/kandekar007/sleepytube?color=8b7cf6)](https://github.com/kandekar007/sleepytube/stargazers)
+<p align="center">
+  <a href="https://kandekar007.github.io/sleepytube/demo/"><img src="https://img.shields.io/badge/Live_demo-try_it-b9c6e4?style=flat-square" alt="Live demo"></a>
+  <a href="https://github.com/kandekar007/sleepytube/releases/latest"><img src="https://img.shields.io/github/v/release/kandekar007/sleepytube?label=download&style=flat-square&color=3a3a3c" alt="Download"></a>
+  <a href="https://buymeacoffee.com/adityakandekar"><img src="https://img.shields.io/badge/Buy_me_a_coffee-support-ffdd00?style=flat-square&logo=buymeacoffee&logoColor=black" alt="Buy me a coffee"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/kandekar007/sleepytube/releases"><img src="https://img.shields.io/github/downloads/kandekar007/sleepytube/total?label=downloads&style=flat-square&color=3a3a3c" alt="Downloads"></a>
+  <a href="https://hits.sh/github.com/kandekar007/sleepytube/"><img src="https://hits.sh/github.com/kandekar007/sleepytube.svg?label=visitors&style=flat-square&color=3a3a3c" alt="Visitors"></a>
+  <a href="https://github.com/kandekar007/sleepytube/stargazers"><img src="https://img.shields.io/github/stars/kandekar007/sleepytube?style=flat-square&color=3a3a3c" alt="Stars"></a>
+</p>
 <!-- Once published on the Chrome Web Store, add (replace EXTENSION_ID):
-[![Users](https://img.shields.io/chrome-web-store/users/EXTENSION_ID?color=8b7cf6)](https://chromewebstore.google.com/detail/EXTENSION_ID)
+[![Users](https://img.shields.io/chrome-web-store/users/EXTENSION_ID?style=flat-square&color=3a3a3c)](https://chromewebstore.google.com/detail/EXTENSION_ID)
 -->
 
 ![SleepyTube demo](demo/sleepytube-demo.gif)
@@ -47,8 +57,8 @@ This takes about a minute.
 3. Turn on **Developer mode** (top-right toggle).
 4. Click **Load unpacked** and select the unzipped folder (the one containing
    `manifest.json`).
-5. Pin SleepyTube from the 🧩 puzzle menu so its icon stays in the toolbar.
-6. Open (or reload) a YouTube video, click the 🌙 icon and pick a mood. Open
+5. Pin SleepyTube from the puzzle-piece Extensions menu so its icon stays in the toolbar.
+6. Open (or reload) a YouTube video, click the SleepyTube icon and pick a mood. Open
    **Fine-tune** for every setting.
 
 If the popup says "Click the YouTube page once to start", click anywhere on the
@@ -57,34 +67,39 @@ page. Chrome needs a user gesture before web audio can start.
 Settings are shared by all YouTube tabs and saved automatically. The toggle in
 the popup turns every sound and screen effect off instantly.
 
-**Updating:** download or `git pull` the new version, then click ↻ on the
+**Updating:** download or `git pull` the new version, then click the reload arrow on the
 SleepyTube card in `chrome://extensions`.
 
-## Sound effects (🎧 Sound tab)
+## Sound effects (Sound tab)
 
-- **Speed** – slows playback and lowers the pitch (the "slowed" sound)
-- **Muffle** – low-pass filter, like hearing it through a wall
-- **Warmth** – bass boost + softer treble
-- **Reverb / Room size** – generated dark reverb, 1–8 s tails
-- **8D drift** – sound slowly drifts left ↔ right
-- **Echo / Delay / Repeats** – darkening feedback echo
-- **Hush** – brown, pink, white or rain noise that only plays while the video plays
-- **Volume** – output trim (a gentle compressor smooths peaks)
-- **Presets** – Sleepy, Slowed + Reverb, Underwater, Next Room, Cathedral, Lo-fi Rain, Dreamy 8D
-- **Sleep timer** – fades out over the last couple of minutes, then pauses the video
+- **Speed**: slows playback and lowers the pitch (the "slowed" sound)
+- **Muffle**: low-pass filter, like hearing it through a wall
+- **Warmth**: bass boost + softer treble
+- **Reverb / Room size**: generated dark reverb, 1–8 s tails
+- **8D drift**: sound slowly drifts between left and right
+- **Echo / Delay / Repeats**: darkening feedback echo
+- **Hush**: brown, pink, white or rain noise that only plays while the video plays
+- **Volume**: output trim (a gentle compressor smooths peaks)
+- **Presets**: Sleepy, Slowed + Reverb, Underwater, Next Room, Cathedral, Lo-fi Rain, Dreamy 8D
+- **Sleep timer**: fades out over the last couple of minutes, then pauses the video
 
-## Screen effects (🌙 Screen tab)
+## Screen effects (Screen tab)
 
-- **Black screen** – blacks out the whole page while the sound keeps playing.
-  Move the mouse over it to show a **☀️ Show video** button (and the sleep
+- **Black screen**: blacks out the whole page while the sound keeps playing.
+  Move the mouse over it to show a **Show video** button (and the sleep
   countdown); it fades away again after a couple of seconds.
-- **Dim** – darkens the page
-- **Blue cut** – blue-light filter that warms the colours
-- **Sepia** / **B&W** – old-photo tint or black and white
-- **Soften** – gently blurs the video picture
-- **Looks** – Off, Night, Candle, Dark, Sepia, B&W, Dreamy
+- **Dim**: darkens the page
+- **Blue cut**: blue-light filter that warms the colours
+- **Sepia** / **B&W**: old-photo tint or black and white
+- **Soften**: gently blurs the video picture
+- **Looks**: Off, Night, Candle, Dark, Sepia, B&W, Dreamy
 
-Screen effects also work in fullscreen. The ↺ button resets only the tab you are on.
+Screen effects also work in fullscreen. The reset button resets only the tab you are on.
+
+## Themes
+
+The palette button in the popup header picks the accent colour used by the popup and the black screen:
+**Moonlight** (default), Pearl, Champagne, Sage, Rose and Iris. Reset doesn't change your theme.
 
 ## Publishing
 
@@ -104,6 +119,6 @@ permission, to save your settings.
 
 If SleepyTube helps you drift off, you can buy me a coffee:
 
-<a href="https://buymeacoffee.com/adityakandekar"><img src="https://img.shields.io/badge/Buy_me_a_coffee-☕-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black" alt="Buy me a coffee"></a>
+<a href="https://buymeacoffee.com/adityakandekar"><img src="https://img.shields.io/badge/Buy_me_a_coffee-support-ffdd00?style=flat-square&logo=buymeacoffee&logoColor=black" alt="Buy me a coffee"></a>
 
-There's also a ☕ button in the popup header.
+There's also a coffee cup button in the popup header.

@@ -15,18 +15,37 @@
   // ---------- Up next ----------
 
   const UP_NEXT = [
-    ['🌧️', 'rain on a tin roof for deep sleep · 10 hours', 'Sleep Sounds', '3.1M views', '10:00:00', '#1e3c72, #2a5298 55%, #6dd5ed'],
-    ['🔥', 'cozy cabin fireplace crackle with snow outside', 'Hearth TV', '870K views', '3:00:00', '#f12711, #f5af19'],
-    ['🌌', 'ambient space music for sleep and dreaming', 'Nebula', '1.4M views', '8:00:00', '#2f0743, #6a3093 50%, #c471ed'],
-    ['🌊', 'ocean waves at night, no music', 'Calm Coast', '2.2M views', '5:00:00', '#00c6ff, #0072ff'],
-    ['🌲', 'forest night: crickets, owls and a stream', 'Wildwood', '640K views', '2:00:00', '#134e5e, #71b280'],
-    ['🎹', 'sad piano for rainy days', 'Ivory Rain', '990K views', '1:12:40', '#ee9ca7, #ffdde1']
+    ['rain on a tin roof for deep sleep, 10 hours', 'Sleep Sounds', '3.1M views', '10:00:00', '#2c3e50, #4c6075'],
+    ['cozy cabin fireplace crackle with snow outside', 'Hearth TV', '870K views', '3:00:00', '#3a1f12, #a0522d'],
+    ['ambient space music for sleep and dreaming', 'Nebula', '1.4M views', '8:00:00', '#0b1026, #2b3557'],
+    ['ocean waves at night, no music', 'Calm Coast', '2.2M views', '5:00:00', '#12303f, #3d7a8a'],
+    ['forest night: crickets, owls and a stream', 'Wildwood', '640K views', '2:00:00', '#13241a, #3e5b45'],
+    ['sad piano for rainy days', 'Ivory Rain', '990K views', '1:12:40', '#3b3437, #8a7d80']
   ];
-  $('upNext').innerHTML = UP_NEXT.map(([icon, title, ch, views, dur, grad]) => `
+  $('upNext').innerHTML = UP_NEXT.map(([title, ch, views, dur, grad]) => `
     <div class="up">
-      <div class="thumb" style="background:linear-gradient(135deg, ${grad})">${icon}<small>${dur}</small></div>
+      <div class="thumb" style="background:linear-gradient(160deg, ${grad})"><small>${dur}</small></div>
       <div class="up-text"><b>${title}</b><span>${ch}</span><span>${views}</span></div>
     </div>`).join('');
+
+  // ---------- Theme: the demo page follows the popup's theme picker ----------
+
+  const { THEMES, themeOf } = globalThis.SleepyTube;
+  let spectrumColors = [];
+  const mix = (hex, to, amt) => {
+    const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    return `rgb(${c.map((v) => Math.round(v + (to - v) * amt)).join(',')})`;
+  };
+  function applyDemoTheme(id) {
+    const t = themeOf(id);
+    document.documentElement.style.setProperty('--tint', t.tint);
+    document.documentElement.style.setProperty('--on-tint', t.onTint);
+    spectrumColors = [mix(t.tint, 0, 0.38), mix(t.tint, 255, 0.45)];
+  }
+  applyDemoTheme(localStorage.getItem('theme') in THEMES ? localStorage.getItem('theme') : null);
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes.theme) applyDemoTheme(changes.theme.newValue);
+  });
 
   // ---------- The real popup, inside an iframe ----------
 
@@ -88,10 +107,13 @@
   $('scene').addEventListener('click', togglePlay);
   const syncPlaying = () => {
     player.classList.toggle('playing', !video.paused);
-    $('playBtn').textContent = video.paused ? '▶' : '❚❚';
+    $('playBtn').innerHTML = video.paused
+      ? '<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#fff" d="M8 5.5v13l10.5-6.5z"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="20" height="20"><rect fill="#fff" x="6.5" y="5.5" width="3.6" height="13" rx="1"/><rect fill="#fff" x="13.9" y="5.5" width="3.6" height="13" rx="1"/></svg>';
   };
   video.addEventListener('play', syncPlaying);
   video.addEventListener('pause', syncPlaying);
+  syncPlaying();
 
   // The extension softens the <video>; the picture here is a canvas, so mirror it.
   new MutationObserver(() => { $('scene').style.filter = video.style.filter; })
@@ -345,8 +367,8 @@
     const nyq = a.context.sampleRate / 2;
     const bw = w / BARS;
     const grd = sg.createLinearGradient(0, 0, w, 0);
-    grd.addColorStop(0, '#8b6cff');
-    grd.addColorStop(1, '#9ee0ff');
+    grd.addColorStop(0, spectrumColors[0]);
+    grd.addColorStop(1, spectrumColors[1]);
     sg.fillStyle = grd;
     for (let i = 0; i < BARS; i++) {
       const f0 = 40 * (16000 / 40) ** (i / BARS);
@@ -374,11 +396,11 @@
     drawSpectrum();
 
     const rate = video.playbackRate;
-    $('rate').textContent = `${rate.toFixed(2)}×`;
+    $('rate').textContent = `${rate.toFixed(2)}x`;
     const semis = 12 * Math.log2(rate);
     $('pitch').textContent = Math.abs(rate - 1) < 0.005
       ? 'original speed & pitch'
-      : `${rate.toFixed(2)}× speed · ${semis.toFixed(1)} semitones`;
+      : `${rate.toFixed(2)}x speed, ${semis.toFixed(1)} semitones`;
     const s = window.demoChrome.store.settings;
     $('liveFx').classList.toggle('on', !s || s.enabled !== false);
     if (video.duration) {
@@ -450,6 +472,7 @@
       void cursor.offsetWidth;
       cursor.classList.add('click');
       el.click();
+      fdoc()?.activeElement?.blur();
       await pause(350);
     };
     const drag = async (input, to) => {
@@ -473,9 +496,9 @@
         await pause(35);
       }
     };
-    const say = (n, icon, title, body) => {
+    const say = (n, title, body) => {
       alive();
-      $('capStep').textContent = icon;
+      $('capStep').textContent = String(n);
       $('capTitle').textContent = title;
       $('capBody').textContent = body;
       const text = document.querySelector('.cap-text');
@@ -507,55 +530,55 @@
       panelOpen(true);
       if (video.paused) video.play().catch(() => {});
 
-      say(1, '🎬', 'A normal YouTube video', 'Plain lofi beats, straight from the page. Have a listen…');
+      say(1, 'A normal YouTube video', 'Plain lofi beats, straight from the page. Have a listen.');
       await moveTo($('scene'), 0.45, 0.4);
       await pause(3800);
 
-      say(2, '🌙', 'Switch SleepyTube on', 'The "Sleepy" mood slows it down, lowers the pitch, muffles it and adds a soft hush.');
+      say(2, 'Switch SleepyTube on', 'The "Sleepy" mood slows it down, lowers the pitch, muffles it and adds a soft hush.');
       await tap(q('header .power'));
       await pause(5200);
 
-      say(3, '🌊', 'One-click moods', 'Underwater: deep, muffled and far away.');
+      say(3, 'One-click moods', 'Underwater: deep, muffled and far away.');
       await tap(byText('#presets .preset', 'Underwater'));
       await pause(4500);
 
-      say(4, '🐢', 'Slowed + Reverb', 'The classic slowed sound in a big, dreamy room.');
+      say(4, 'Slowed + Reverb', 'The classic slowed sound in a big, dreamy room.');
       await tap(byText('#presets .preset', 'Slowed'));
       await pause(5000);
 
-      say(5, '🧱', 'Muffle', 'Like hearing it through a wall. Watch the treble vanish from the spectrum below the video.');
+      say(5, 'Muffle', 'Like hearing it through a wall. Watch the treble vanish from the spectrum below the video.');
       await tap(byText('#presets .preset', 'Sleepy'));
       await drag(q('input[aria-label="Muffle"]'), 92);
       await pause(3500);
 
-      say(6, '🌧️', 'Add a hush', 'Brown, pink, fan or rain noise, playing only while the video plays.');
+      say(6, 'Add a hush', 'Brown, pink, fan or rain noise, playing only while the video plays.');
       await tap(byText('#noiseType button', 'Rain'));
       await drag(q('input[aria-label="Hush"]'), 40);
       await pause(3500);
 
-      say(7, '🌙', 'Now the screen', 'Night look: a blue-light filter that warms the colours, plus a little dimming.');
+      say(7, 'Now the screen', 'Night look: a blue-light filter that warms the colours, plus a little dimming.');
       await tap(q('[data-tab="screen"]'));
       await tap(byText('#looks .preset', 'Night'));
       await pause(3500);
 
-      say(8, '🕯️', 'Candle', 'Very warm and candle-lit.');
+      say(8, 'Candle', 'Very warm and candle-lit.');
       await tap(byText('#looks .preset', 'Candle'));
       await pause(3200);
 
-      say(9, '🌗', 'Black & white', 'Or sepia, or mix your own with the sliders.');
+      say(9, 'Black & white', 'Or sepia, or mix your own with the sliders.');
       await tap(byText('#looks .preset', 'B&W'));
       await pause(3200);
 
-      say(10, '☁️', 'Dreamy', 'Soft, warm and hazy. The video picture itself is gently blurred.');
+      say(10, 'Dreamy', 'Soft, warm and hazy. The video picture itself is gently blurred.');
       await tap(byText('#looks .preset', 'Dreamy'));
       await pause(3600);
 
-      say(11, '🖤', 'Black screen', 'Blacks out the page while the sound keeps playing.');
+      say(11, 'Black screen', 'Blacks out the page while the sound keeps playing.');
       await tap(q('label.switch-row'));
       await pause(2200);
       const host = $('sleepytube-blackout');
       const wake = () => host?.dispatchEvent(new MouseEvent('mousemove', { bubbles: true }));
-      say(11, '🖤', 'Black screen', 'Move the mouse and a "Show video" button fades in, so it never traps you.');
+      say(11, 'Black screen', 'Move the mouse and a "Show video" button fades in, so it never traps you.');
       await moveTo(host, 0.42, 0.62);
       wake();
       await pause(1300);
@@ -563,17 +586,17 @@
       await tap(host?.shadowRoot?.querySelector('button'));
       await pause(1500);
 
-      say(12, '⏲️', 'Sleep timer', 'Fades the sound out over the last minutes, then pauses the video.');
+      say(12, 'Sleep timer', 'Fades the sound out over the last minutes, then pauses the video.');
       await tap(byText('#sleep button', '30m'));
       await pause(3800);
 
-      say(12, '✨', "That's SleepyTube", 'Now it\'s your turn: everything here is live. Install it from chrome://extensions → Load unpacked.');
+      say(12, "That's SleepyTube", 'Now it\'s your turn: everything here is live. Install it from chrome://extensions with Load unpacked.');
       await tap(byText('#sleep button', 'Off'));
       await tap(byText('#looks .preset', 'Off'));
       await tap(q('[data-tab="sound"]'));
       cursor.hidden = true;
       $('skipBtn').textContent = 'Close';
-      replayBtn.textContent = '✨ Replay tour';
+      replayBtn.textContent = 'Replay tour';
       replayBtn.hidden = false;
       window.demoTourDone = true;
     } catch (e) {
@@ -585,7 +608,7 @@
     tourToken += 1;
     $('caption').hidden = true;
     cursor.hidden = true;
-    replayBtn.textContent = '✨ Replay tour';
+    replayBtn.textContent = 'Replay tour';
     replayBtn.hidden = false;
     window.demoTourDone = true;
     // Don't leave the page blacked out if the tour was skipped mid-step.
@@ -602,7 +625,7 @@
     if (tour) runTour();
     else {
       panelOpen(true);
-      replayBtn.textContent = '✨ Take the tour';
+      replayBtn.textContent = 'Take the tour';
       replayBtn.hidden = false;
     }
   };
@@ -611,7 +634,7 @@
   window.demoStartTour = runTour;
 
   video.src = await window.makeLofi();
-  $('tourBtn').textContent = '✨ Take the 60-second tour';
+  $('tourBtn').textContent = 'Take the 60-second tour';
   $('tourBtn').disabled = false;
   $('exploreBtn').disabled = false;
 })();

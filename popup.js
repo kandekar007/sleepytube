@@ -2,8 +2,20 @@
   'use strict';
   const {
     AUDIO_DEFAULTS, VISUAL_DEFAULTS, PRESETS, LOOKS,
-    CONTROLS, VISUAL_CONTROLS, NOISE_TYPES, SLEEP_OPTIONS, normalize
+    CONTROLS, VISUAL_CONTROLS, NOISE_TYPES, SLEEP_OPTIONS, normalize,
+    THEMES, themeOf
   } = globalThis.SleepyTube;
+
+  // Paint the cached theme before any await so the popup never flashes the wrong colour.
+  let themeId = localStorage.getItem('theme') in THEMES ? localStorage.getItem('theme') : 'moonlight';
+  function applyTheme(id) {
+    themeId = id in THEMES ? id : 'moonlight';
+    const t = themeOf(themeId);
+    document.documentElement.style.setProperty('--tint', t.tint);
+    document.documentElement.style.setProperty('--on-tint', t.onTint);
+    localStorage.setItem('theme', themeId);
+  }
+  applyTheme(themeId);
 
   const $ = (id) => document.getElementById(id);
   const el = (tag, props = {}, ...children) => {
@@ -11,6 +23,12 @@
     node.append(...children);
     return node;
   };
+  const icon = (name, size) => {
+    const t = document.createElement('template');
+    t.innerHTML = globalThis.SleepyIcons.svg(name, size);
+    return t.content.firstChild;
+  };
+  for (const node of document.querySelectorAll('[data-icon]')) node.append(icon(node.dataset.icon));
 
   const sliders = {};
   let settings = normalize((await chrome.storage.local.get('settings')).settings);
@@ -44,7 +62,7 @@
     input.setAttribute('aria-label', c.label);
     const val = el('span', { className: 'val' });
     const name = el('span', { className: 'name' });
-    if (c.icon) name.append(el('span', { className: 'ico', textContent: c.icon }));
+    if (c.icon) name.append(icon(c.icon, 17));
     name.append(c.label);
     const row = el('label', { className: 'ctrl', title: c.hint || '' }, name, input, val);
 
@@ -78,7 +96,7 @@
 
   const noiseButtons = {};
   for (const [key, t] of Object.entries(NOISE_TYPES)) {
-    const b = el('button', { type: 'button', title: t.hint, textContent: `${t.icon} ${t.label}` });
+    const b = el('button', { type: 'button', title: t.hint, textContent: t.label });
     b.setAttribute('role', 'radio');
     b.addEventListener('click', () => {
       settings.noiseType = key;
@@ -97,7 +115,7 @@
     box.textContent = '';
     for (const [key, p] of Object.entries(items)) {
       const b = el('button', { type: 'button', className: 'preset', title: p.hint || p.label },
-        el('span', { className: 'emoji', textContent: p.icon }), p.label);
+        icon(p.icon, 20), el('span', { textContent: p.label }));
       b.classList.toggle('active', settings[field] === key);
       b.addEventListener('click', () => {
         settings = normalize({ ...settings, ...p.values, [field]: key });
@@ -107,14 +125,14 @@
       box.append(b);
     }
     const custom = el('div', { className: 'preset custom', title: customHint },
-      el('span', { className: 'emoji', textContent: '🎚️' }), 'Custom');
+      icon('sliders', 20), el('span', { textContent: 'Custom' }));
     custom.classList.toggle('active', settings[field] === 'custom');
     box.append(custom);
   }
 
   function renderChoices() {
-    renderChoiceGrid($('presets'), PRESETS, 'preset', 'Your own mix — move any slider');
-    renderChoiceGrid($('looks'), LOOKS, 'look', 'Your own look — move any slider');
+    renderChoiceGrid($('presets'), PRESETS, 'preset', 'Your own mix. Move any slider.');
+    renderChoiceGrid($('looks'), LOOKS, 'look', 'Your own look. Move any slider.');
     const screenOn = settings.blackout || VISUAL_CONTROLS.some((c) => settings[c.key] > 0);
     $('screenBadge').hidden = !screenOn;
   }
@@ -191,6 +209,51 @@
     window.close();
   });
 
+  // ----- Theme -----
+
+  const themeBtn = $('themeBtn');
+  const themePop = $('themes');
+  const themeButtons = new Map();
+  for (const [id, t] of Object.entries(THEMES)) {
+    const b = el('button', { type: 'button', title: t.label },
+      el('span', { className: 'swatch' }), t.label);
+    b.setAttribute('role', 'radio');
+    b.firstChild.style.setProperty('--sw', t.tint);
+    b.addEventListener('click', () => {
+      applyTheme(id);
+      paintThemes();
+      chrome.storage.local.set({ theme: id });
+    });
+    themeButtons.set(id, b);
+    themePop.append(b);
+  }
+  function paintThemes() {
+    for (const [id, b] of themeButtons) b.setAttribute('aria-checked', String(id === themeId));
+  }
+  function showThemes(open) {
+    themePop.hidden = !open;
+    themeBtn.setAttribute('aria-expanded', String(open));
+    if (open) themeButtons.get(themeId)?.focus();
+  }
+  themeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showThemes(themePop.hidden);
+  });
+  document.addEventListener('click', (e) => {
+    if (!themePop.hidden && !themePop.contains(e.target)) showThemes(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !themePop.hidden) {
+      showThemes(false);
+      themeBtn.focus();
+    }
+  });
+  chrome.storage.local.get('theme').then(({ theme }) => {
+    if (theme && theme !== themeId) applyTheme(theme);
+    paintThemes();
+  });
+  paintThemes();
+
   const fine = $('fine');
   fine.open = localStorage.getItem('fineOpen') === '1';
   fine.addEventListener('toggle', () => localStorage.setItem('fineOpen', fine.open ? '1' : '0'));
@@ -227,7 +290,7 @@
     const ms = Math.max(0, endsAt - Date.now());
     const m = Math.floor(ms / 60000);
     const s = Math.floor((ms % 60000) / 1000);
-    $('sleepLeft').textContent = `🌙 ${m}:${String(s).padStart(2, '0')}`;
+    $('sleepLeft').textContent = `${m}:${String(s).padStart(2, '0')} left`;
     $('sleepBar').style.width = `${(ms / (minutes * 60000)) * 100}%`;
   }
 
@@ -243,7 +306,7 @@
   }
 
   function setStatus(text, cls = '') {
-    $('status').className = `pill ${cls}`;
+    $('status').className = `status ${cls}`;
     $('statusText').textContent = text;
   }
 

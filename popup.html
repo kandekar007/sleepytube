@@ -6,37 +6,33 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="backdrop" aria-hidden="true">
-    <span class="orb o1"></span>
-    <span class="orb o2"></span>
-    <span class="orb o3"></span>
-    <span class="orb o4"></span>
-    <span class="stars"></span>
-  </div>
+  <div class="backdrop" aria-hidden="true"></div>
 
   <header>
     <div class="brand">
-      <div class="moon"><img src="icons/icon48.png" alt="" width="34" height="34"></div>
+      <img class="app-icon" src="icons/icon48.png" alt="" width="34" height="34">
       <div>
         <h1>SleepyTube</h1>
-        <div id="status" class="pill"><span class="dot"></span><span id="statusText">Checking…</span></div>
+        <div id="status" class="status"><span class="dot"></span><span id="statusText">Checking…</span></div>
       </div>
     </div>
     <div class="header-actions">
-      <a id="coffee" class="icon-btn coffee" href="https://buymeacoffee.com/adityakandekar" target="_blank" rel="noopener" title="Buy me a coffee" aria-label="Buy me a coffee">☕</a>
-      <button id="reset" class="icon-btn" type="button" title="Reset">↺</button>
-      <label class="power" title="Turn everything on/off">
-        <input type="checkbox" id="enabled">
+      <a id="coffee" class="icon-btn coffee" href="https://buymeacoffee.com/adityakandekar" target="_blank" rel="noopener" title="Buy me a coffee" aria-label="Buy me a coffee" data-icon="cup"></a>
+      <button id="themeBtn" class="icon-btn" type="button" title="Theme" aria-label="Theme" aria-haspopup="true" aria-expanded="false" aria-controls="themes" data-icon="palette"></button>
+      <button id="reset" class="icon-btn" type="button" title="Reset" aria-label="Reset" data-icon="reset"></button>
+      <label class="power" title="Turn everything on or off">
+        <input type="checkbox" id="enabled" aria-label="SleepyTube on">
         <span class="track"><span class="knob"></span></span>
       </label>
     </div>
+    <div id="themes" class="theme-pop" role="radiogroup" aria-label="Theme" hidden></div>
   </header>
 
-  <button id="reload" class="banner" hidden>↻ Reload this tab to start SleepyTube</button>
+  <button id="reload" class="banner" hidden><span data-icon="reload"></span>Reload this tab to start SleepyTube</button>
 
   <nav class="tabs segmented" role="tablist">
-    <button type="button" role="tab" data-tab="sound">🎧 Sound</button>
-    <button type="button" role="tab" data-tab="screen">🌙 Screen<span id="screenBadge" class="badge" hidden></span></button>
+    <button type="button" role="tab" data-tab="sound">Sound</button>
+    <button type="button" role="tab" data-tab="screen">Screen<span id="screenBadge" class="badge" hidden></span></button>
   </nav>
 
   <main id="fx">
@@ -55,7 +51,7 @@
     <details id="fine" class="card">
       <summary>
         <h2>Fine-tune</h2>
-        <span class="chev" aria-hidden="true">›</span>
+        <span class="chev" data-icon="chevron"></span>
       </summary>
       <div id="fineControls"></div>
     </details>
@@ -64,10 +60,10 @@
     <div class="pane" data-pane="screen" hidden>
       <section class="card">
         <label class="switch-row">
-          <span class="sr-icon">🖤</span>
+          <span class="sr-icon" data-icon="moonFill"></span>
           <span class="sr-text">
             <strong>Black screen</strong>
-            <small>Blacks out the page, sound keeps playing. Move the mouse over it for a “Show video” button.</small>
+            <small>Blacks out the page, sound keeps playing. Move the mouse over it to bring the video back.</small>
           </span>
           <span class="power">
             <input type="checkbox" id="blackout">
@@ -93,6 +89,7 @@
     <div class="progress"><span id="sleepBar"></span></div>
   </section>
 
+  <script src="icons.js"></script>
   <script src="settings.js"></script>
   <script src="popup.js"></script>
 </body>

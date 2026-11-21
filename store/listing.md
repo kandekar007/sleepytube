@@ -15,7 +15,7 @@ Make YouTube sleepy: slowed, muffled, reverb and echo sound, soft hush noise, a 
 
 SleepyTube turns any YouTube video into something you can fall asleep to.
 
-🎧 SOUND
+SOUND
 • One-click moods: Sleepy, Slowed + Reverb, Underwater, Next Room, Cathedral, Lo-fi Rain, Dreamy 8D
 • Slow it down and lower the pitch
 • Muffle the treble, like hearing it through a wall
@@ -23,10 +23,11 @@ SleepyTube turns any YouTube video into something you can fall asleep to.
 • A soft "hush" of brown, pink, fan or rain noise underneath
 • Sleep timer that gently fades the sound out, then pauses the video
 
-🌙 SCREEN
+SCREEN
 • Black screen: the page goes dark while the sound keeps playing. Move the mouse for a "Show video" button
 • Looks: Night (blue-light cut), Candle, Dark, Sepia, Black & White, Dreamy
 • Fine-tune dim, blue cut, sepia, B&W and soften yourself
+• Six calm colour themes: Moonlight, Pearl, Champagne, Sage, Rose and Iris
 
 Works on youtube.com, YouTube Music and m.youtube.com. Settings are saved and shared by all YouTube tabs. One switch turns everything off instantly.
 

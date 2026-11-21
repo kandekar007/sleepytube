@@ -6,5 +6,5 @@ VERSION=$(python3 -c "import json; print(json.load(open('manifest.json'))['versi
 mkdir -p dist
 OUT="dist/sleepytube-$VERSION.zip"
 rm -f "$OUT"
-zip -qr "$OUT" manifest.json settings.js content.js popup.html popup.css popup.js icons
+zip -qr "$OUT" manifest.json settings.js content.js popup.html popup.css popup.js icons.js icons
 echo "Built $OUT"

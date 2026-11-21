@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SleepyTube",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Make YouTube sleepy: slowed, muffled, reverb and echo sound, soft hush noise, a sleep timer and calming screen filters.",
   "permissions": [
     "storage"
