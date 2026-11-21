@@ -113,7 +113,7 @@ Bump `version` in `manifest.json` before each update.
 
 Everything runs on your device. SleepyTube has no accounts or tracking and sends
 no data anywhere. It only runs on YouTube pages and only uses the `storage`
-permission, to save your settings.
+permission, to save your settings. Full policy: [privacy.html](https://kandekar007.github.io/sleepytube/privacy.html).
 
 ## Support
 

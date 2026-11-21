@@ -9,7 +9,9 @@ Copy these into the Developer Dashboard (https://chrome.google.com/webstore/devc
 **Summary** (from manifest, 132 chars max):
 Make YouTube sleepy: slowed, muffled, reverb and echo sound, soft hush noise, a sleep timer and calming screen filters.
 
-**Category:** Entertainment (or Accessibility)
+**Category:** Lifestyle › Well-being
+
+**Language:** English
 
 **Description:**
 
@@ -55,5 +57,26 @@ Changes how YouTube videos sound and look (slowed, muffled, reverb, background n
 
 **Data usage:** Collects no user data. Tick none of the data types, then certify the three disclosures (not sold, not used for unrelated purposes, not used for creditworthiness).
 
-**Privacy policy URL:** Not required when no data is collected. If the form insists, use a page stating:
-"SleepyTube does not collect, store or transmit any personal data. Settings are saved locally in your browser using chrome.storage."
+**Privacy policy URL:** https://kandekar007.github.io/sleepytube/privacy.html
+
+## Distribution tab
+
+- **Payments:** Free
+- **Visibility:** Public
+- **Regions:** All regions
+
+## Test instructions (optional, helps the reviewer)
+
+No login or setup is needed. Open any YouTube video, click the SleepyTube icon and turn it on. The Sound tab's moods change the audio at once. The Screen tab's Black screen covers the page while audio keeps playing; move the mouse to show the "Show video" button.
+
+## Publishing steps
+
+1. Go to https://chrome.google.com/webstore/devconsole with the Google account you want as publisher, accept the developer agreement and pay the one-time $5 fee.
+2. Turn on 2-Step Verification for that Google account (required before you can publish).
+3. In Account: set the publisher name, verify the contact email, and declare **non-trader** (you aren't selling anything). Choosing trader would show your address and phone number on the listing.
+4. Run `./package.sh`, then click **New item** and upload `dist/sleepytube-<version>.zip`.
+5. Fill in the Store listing, Privacy practices and Distribution tabs from this file, then upload the icon, screenshots and promo tiles.
+6. Click **Submit for review**. Reviews of small extensions with one permission usually take a few days. The listing goes live automatically once approved, unless you untick that option.
+7. After it's approved, replace the Load unpacked steps in the README with the store link.
+
+For updates, bump `version` in `manifest.json`, run `./package.sh`, and upload the new zip under **Package** for the same item.
